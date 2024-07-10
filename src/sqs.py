@@ -5,11 +5,13 @@ from dataclasses import dataclass
 import hashlib
 import boto3
 import os
+import psycopg2
+from psycopg2.extras import execute_values
 from datetime import datetime
 
 # Set up environment variables for dummy AWS credentials
-os.environ["AWS_ACCESS_KEY_ID"] = "dummy_access_key"
-os.environ["AWS_SECRET_ACCESS_KEY"] = "dummy_secret_key"
+os.environ["AWS_ACCESS_KEY_ID"] = "dummy"
+os.environ["AWS_SECRET_ACCESS_KEY"] = "dummy"
 
 # Initialize SQS client with the local endpoint and a region
 sqs = boto3.client("sqs", endpoint_url="http://localhost:4566",
@@ -102,9 +104,6 @@ def mask_pii_data(data: Dict[str, Any]) -> Dict[str, Any]:
         "app_version": app_version,
         "create_date": datetime.now(),
     }
-
-import psycopg2
-from psycopg2.extras import execute_values
 
 # Function to convert a list of 'Record' objects to a list of tuples
 def convert_records_to_tuples(records):
